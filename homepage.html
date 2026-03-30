@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librio - Digital Library</title>
+    <!-- Font Awesome for icons (Updated Link) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+         body {
+            font-family: 'Josefin Sans', sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            background-color: #ffefde;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Hides the vertical scrollbar */
+            width: 100%; /* Ensures full height coverage */
+        }
+        /* Header */
+        header {
+            background-color: #000000;
+            padding: 20px 0;
+            color: #fff;
+            position: relative;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        header:hover {
+            background-color: #111;
+        }
+
+        header .logo {
+            font-size: 34px;
+            margin-left: 60px;
+            font-weight: bold;
+        }
+        nav {
+            flex: 1; /* Make the nav take available space */
+            display: flex;
+            justify-content: center; /* Center the nav items */
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            position: relative; /* Make parent position relative */
+        }
+        nav ul li {
+            margin: 0 8px; /* Center spacing between items */
+            margin-top: 10px;
+            position: relative;
+            height: 27px;
+
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 80px 9px;
+            transition: color 0.3s;
+            position: relative; /* For pseudo-element */
+        }
+        nav ul li a:hover {
+            color: #ff1b4c;
+        }
+
+        /* Dropdown Menu */
+        nav ul li ul {
+            display: none; /* Hide dropdown by default */
+            position: absolute;
+            left: 10px;
+            top: 100%; /* Position below the parent item */
+            background-color:#ff1b4c; /* Background color for dropdown */
+            padding: 20px 0;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(138, 138, 138, 0.5);
+        }
+
+        nav ul li:hover ul {
+            display: block; /* Show dropdown on hover */
+        }
+
+        nav ul li ul li {
+            width: 200px; /* Set width for dropdown items */
+        }
+
+        nav ul li ul li a {
+            padding: 5px 11px; /* Padding for dropdown items */
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.3s; /* Transition for hover effect */
+        }
+
+        nav ul li ul li a:hover {
+            background-color: #ffffff; /* Background color on hover for dropdown */
+        }
+
+        .icon a {
+    font-size: 18px;
+    margin-left: 5px; /* Reduced margin for less space between icons */
+    left: 60px;
+    color: #fff;
+}
+
+.icon a:first-child {
+    margin-right: -23px; /* Ensure the first icon does not have extra margin */
+
+}
+
+.icon a:hover {
+    color: #ff1b4c;
+}
+
+/* Search Bar */
+.search-bar {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar.show {
+    display: block;
+}
+
+.search-bar input {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    margin-right: 8px; /* Space between input and button */
+}
+
+.search-bar button {
+    padding: 8px 12px;
+    background-color: #007BFF; /* Primary button color */
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+/* Image Section */
+.image-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 150px 0;
+    position: relative;
+    overflow: hidden; /* Prevent images from overflowing during the slide */
+    width: 100%;
+}
+
+/* Image Styling */
+.image-section img {
+    width: 600px;
+    height: 350px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    margin: 7px;
+    margin-top: 3px;
+    border-radius: 5px; /* Slight border radius */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add gray shadow */
+}
+
+/* Left and Right Images */
+.image-left, .image-right {
+    opacity: 0.4;
+    transform: scale(0.9); /* Slightly smaller */
+    pointer-events: none; /* Prevent interaction */
+}
+
+/* Center Image */
+.image-center {
+    opacity: 1;
+    transform: scale(1.1); /* Slightly larger */
+}
+
+/* Navigation Arrows */
+.image-nav {
+    font-size: 40px;
+    color: #595959;
+    cursor: pointer;
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.image-nav.left {
+    left: 10px;
+}
+
+.image-nav.right {
+    right: 10px;
+}
+
+
+        .prev {
+            left: calc(50% - 500px); /* Position left icon */
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .next {
+            left: calc(50% + 520px); /* Position right icon */
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .preview {
+            left: calc(50% - 640px); /* Position preview icon */
+            top: calc(50% + 100px);
+            font-size: 30px;
+            color: #000000;
+            cursor: pointer;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Image Section */
+        .image-section {
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0 30px 0; /* Reduced top margin to decrease gap below header */
+            position: relative;
+            border-radius: 15px 50px 30px 5px;
+        }
+
+       /* Image Descriptions */
+        .image-description {
+          text-align: center;
+          margin-top: 15px; /* Reduced top margin to decrease gap between image and heading */
+        }
+        .image-description h3 {
+            margin-top: 2px;
+            font-size: 24px;
+            color: #333;
+        }   
+        .image-description p {
+            margin: 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Dotted Progress */
+        .progress-dots {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .progress-dots span {
+            height: 10px;
+            width: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .progress-dots .active {
+            background-color: #333;
+        }
+        /* Additional Content for Scrolling */
+        .extra-content {
+            padding: 50px 20px;
+            text-align: center;
+            font-size: 20px;
+            color: #333;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #d1d1d1;
+            color: #000000;
+            padding: 50px 20px;
+            text-align: center;
+        }
+       .footer-heading {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+       .footer-description {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+       .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+       .footer-links a {
+            color: #868585;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">LIBRIO</div>
+        <nav>
+            <ul>
+                <li><a href=" ">HOME</a></li>
+                <li><a href="#ebooks">EBOOKS</a>
+                    <ul>
+                        <li><a href="{% url 'ebook' %}">NEW RELEASES</a></li>
+                        <li><a href="{% url 'ebook' %}">BEST SELLERS</a></li>
+                        <li><a href="{% url 'ebook' %}">GENRES</a></li>
+                        <li><a href="{% url 'ebook' %}">AUTHORS</a></li>
+                    </ul>
+                </li>
+                <li><a href="#audiobooks">AUDIOBOOKS</a>
+                    <ul>
+                        <li><a href="{% url 'audio' %}">NEW RELEASES</a></li>
+                        <li><a href="{% url 'audio' %}">BEST SELLERS</a></li>
+                        <li><a href="{% url 'audio' %}">GENRES</a></li>
+                    </ul>
+                </li>
+                <li><a href="#magazines">MAGAZINES</a>
+                    <ul>
+                        <li><a href="{% url 'magazine' %}">LASTEST ISSUES</a></li>
+                        <li><a href="#">POPULAR</a></li>
+                        <li><a href="#">CATEGORIES</a></li>
+                    </ul>
+                </li>
+                <li><a href="#newspapers">NEWSPAPERS</a>
+                    <ul>
+                        <li><a href="{% url 'newpaper' %}">TOP STORIES</a></li>
+                        <li><a href="#">DAILY EDITION</a></li>
+                        <li><a href="#">ARCHIVES</a></li>
+                    </ul>
+                </li>
+                <li><a href="#store">STORE</a>
+                    <ul>
+                        <li><a href="{% url 'album' %}">ALBUM</a></li>
+                        <li><a href="{% url 'audiobookstore' %}">AUDIOBOOK</a></li>
+                        <li><a href="{% url 'ebookstore' %}">EBOOK</a></li>
+                        <li><a href="{% url 'magazinestore' %}">MAGAZINE</a></li>
+                        </ul>
+                        </li>
+                        <li class="icon"><a href="#" id="search-icon"><i class="fas fa-search"></i></a></li>
+                        <li class="icon"><a href="#"><i class="fas fa-user"></i></a></li>
+                    </ul>
+                </nav>
+                  <div class="search-bar" id="searchBar">
+        <input type="text" id="searchInput" placeholder="Type something...">
+        <button id="searchButton">Go</button>
+    </div>
+
+    <!-- Script -->
+    <script src="script.js" defer></script>
+            </header>
+
+<!-- Image Section -->
+<div class="image-section">
+  <i class="fas fa-chevron-left image-nav prev"></i>
+  <img class="image-left" src="/static/homepic1.jpg" alt="Left Image">
+  <img class="image-center" src="/static/homepic2.jpg" alt="Center Image">
+  <img class="image-right" src="/static/homepic3.jpg" alt="Right Image">
+  <i class="fas fa-chevron-right image-nav next"></i>
+  <i class="fas fa-eye image-nav preview"></i>
+</div>
+
+<div class="image-description">
+  <h3>Image Title</h3>
+  <p>Description of the image goes here.</p>
+</div>
+
+<!-- Progress Dots -->
+<div class="progress-dots">
+  <span class="active"></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<!-- Extra Content -->
+<div class="extra-content">
+  <p>Additional content goes here...</p>
+</div>
+
+<!-- Footer -->
+<footer>
+  <h4 class="footer-heading">Librio official Page</h4>
+  <p class="footer-description">Name:LIBRIO  Managers: Rubiya Nadaf, Ritika Jadhav<br>
+     Registration No.: 765-89-57638 <br>
+     Email:thelibrio@gmail.com</p>
+
+  <div class="footer-links">
+      <a href="#terms">Terms & Conditions</a>
+      <a href="#privacy">Privacy Policy</a>
+  </div>
+
+  <p>&copy; 2024 Librio. All rights reserved.</p>
+</footer>
+<script>
+  const images = [
+      '/static/homepic1.jpg',  // Replace with your actual image name
+      '/static/homepic2.jpg',  // Replace with your actual image name
+      '/static/homepic3.jpg',  // Replace with your actual image name
+      '/static/homepic4.jpg',  // Replace with your actual image name
+      '/static/homepic5.jpg'   // Replace with your actual image name
+  ];
+
+    let currentIndex = 0; // Start with the first image
+
+  const leftImage = document.querySelector('.image-left');
+  const centerImage = document.querySelector('.image-center');
+  const rightImage = document.querySelector('.image-right');
+
+  function updateImages() {
+      leftImage.src = images[(currentIndex - 1 + images.length) % images.length];
+      centerImage.src = images[currentIndex];
+      rightImage.src = images[(currentIndex + 1) % images.length];
+      updateDots();
+  }
+
+  function updateDots() {
+      const dots = document.querySelectorAll('.progress-dots span');
+      dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+      });
+  }
+
+  document.querySelector('.prev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateImages();
+  });
+
+  document.querySelector('.next').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateImages();
+  });
+
+  document.querySelector('.preview').addEventListener('click', () => {
+      alert("Previewing: " + images[currentIndex]);
+  });
+
+  // Automatically change images every 4 seconds
+  setInterval(() => {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateImages();
+  }, 3000);
+
+  // Initialize with the first set of images
+  updateImages();
+
+  // Search Bar Functionality
+  document.getElementById('search-icon').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default link behavior
+      toggleSearchBar();
+  });
+
+  function toggleSearchBar() {
+      const searchBar = document.getElementById('searchBar');
+      searchBar.classList.toggle('show');
+  }
+
+  document.getElementById('searchButton').addEventListener('click', function () {
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      if (searchTerm) {
+          alert(`Searching for: ${searchTerm}`);
+      } else {
+          alert('Please enter a search term.');
+      }
+  });
+
+</script>
+</body>
+</html>

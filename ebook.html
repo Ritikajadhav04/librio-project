@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Librio - Digital Library</title>
+    <!-- Font Awesome for icons (Updated Link) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Internal CSS -->
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+         body {
+            font-family: 'Josefin Sans', sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            background-color: #ffefde;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Hides the vertical scrollbar */
+            width: 100%; /* Ensures full height coverage */
+        }
+        /* Header */
+        header {
+            background-color: #000000;
+            padding: 20px 0;
+            color: #fff;
+            position: relative;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        header:hover {
+            background-color: #111;
+        }
+
+        header .logo {
+            font-size: 34px;
+            margin-left: 60px;
+            font-weight: bold;
+        }
+        nav {
+            flex: 1; /* Make the nav take available space */
+            display: flex;
+            justify-content: center; /* Center the nav items */
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            position: relative; /* Make parent position relative */
+        }
+        nav ul li {
+            margin: 0 8px; /* Center spacing between items */
+            margin-top: 10px;
+            position: relative;
+            height: 27px;
+
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 80px 9px;
+            transition: color 0.3s;
+            position: relative; /* For pseudo-element */
+        }
+        nav ul li a:hover {
+            color: #ff1b4c;
+        }
+
+        /* Dropdown Menu */
+        nav ul li ul {
+            display: none; /* Hide dropdown by default */
+            position: absolute;
+            left: 10px;
+            top: 100%; /* Position below the parent item */
+            background-color:#ff1b4c; /* Background color for dropdown */
+            padding: 20px 0;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(138, 138, 138, 0.5);
+        }
+
+        nav ul li:hover ul {
+            display: block; /* Show dropdown on hover */
+        }
+
+        nav ul li ul li {
+            width: 200px; /* Set width for dropdown items */
+        }
+
+        nav ul li ul li a {
+            padding: 5px 11px; /* Padding for dropdown items */
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.3s; /* Transition for hover effect */
+        }
+
+        nav ul li ul li a:hover {
+            background-color: #ffffff; /* Background color on hover for dropdown */
+        }
+
+        .icon a {
+    font-size: 18px;
+    margin-left: 5px; /* Reduced margin for less space between icons */
+    left: 60px;
+    color: #fff;
+}
+
+.icon a:first-child {
+    margin-right: -23px; /* Ensure the first icon does not have extra margin */
+
+}
+
+.icon a:hover {
+    color: #ff1b4c;
+}
+
+/* Search Bar */
+.search-bar {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.search-bar.show {
+    display: block;
+}
+
+.search-bar input {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    outline: none;
+    margin-right: 8px; /* Space between input and button */
+}
+
+.search-bar button {
+    padding: 8px 12px;
+    background-color: #007BFF; /* Primary button color */
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+        .ebook-grid {
+            display: grid;
+            margin-top: 30px;
+            margin-left: 25px;
+            grid-template-columns: repeat(4, 1fr); /* 4 books per row */
+            gap: 20px;
+            margin-bottom: 50px;
+            max-width: 1200px;
+            width: 95%;
+        }
+
+        .ebook {
+            position: relative;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            padding-bottom: 20px;
+        }
+
+        .ebook:hover {
+            transform: scale(1.05);
+        }
+
+        .cover-image {
+            width: 120px;
+            height: 200px;
+            margin-top: 10px;
+            object-fit: cover;
+            border-bottom: 2px solid #ff1b4c; /* Vibrant pinkish-red */
+        }
+
+        .ebook-title {
+            padding: 10px 10px 0 10px; /* Add some space above the title */
+            font-size: 18px;
+            color: #ff1b4c; /* Vibrant pinkish-red */
+            font-weight: bold;
+        }
+
+        .ebook-description {
+            padding: 0 10px 10px 10px; /* Add padding around the description */
+            font-size: 14px;
+            color: #333; /* Dark text color for readability */
+            margin-top: 5px;
+        }
+
+        .book-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: #ff1b4c; /* Vibrant pinkish-red */
+            background-color: white;
+            border-radius: 50%;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .read-button {
+            background-color: #ff1b4c; /* Vibrant pinkish-red */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .read-button:hover {
+            background-color: #ff4b6c; /* Brighter pinkish-red */
+            transform: scale(1.05);
+        }
+
+        .read-button:active {
+            transform: scale(0.95);
+        }
+        /* Footer */
+        footer {
+            background-color: #d1d1d1;
+            color: #000000;
+            padding: 50px 20px;
+            text-align: center;
+        }
+       .footer-heading {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+       .footer-description {
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+       .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+       .footer-links a {
+            color: #868585;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">LIBRIO</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'homepage' %}">HOME</a></li>
+                <li><a href="#ebooks">EBOOKS</a>
+                    <ul>
+                        <li><a href="{% url 'ebook' %}">NEW Releases</a></li>
+                        <li><a href="{% url 'ebook' %}">BEST SELLERS</a></li>
+                        <li><a href="{% url 'ebook' %}">GENRES</a></li>
+                        <li><a href="{% url 'ebook' %}">AUTHORS</a></li>
+                    </ul>
+                </li>
+                <li><a href="#audiobooks">AUDIOBOOKS</a>
+                    <ul>
+                        <li><a href="{% url 'audio' %}">NEW RELEASES</a></li>
+                        <li><a href="#">BEST SELLERS</a></li>
+                        <li><a href="#">GENRES</a></li>
+                        <li><a href="#">AUTHORS</a></li>
+                    </ul>
+                </li>
+                <li><a href="#magazines">MAGAZINES</a>
+                    <ul>
+                        <li><a href="{% url 'magazine' %}">LATEST ISSUES</a></li>
+                        <li><a href="#">POPULAR</a></li>
+                        <li><a href="#">CATEGORIES</a></li>
+                    </ul>
+                </li>
+                <li><a href="#newspapers">NEWSPAPERS</a>
+                    <ul>
+                        <li><a href="{% url 'newpaper' %}">TOP STOREIES</a></li>
+                        <li><a href="#">DAILY EDITION</a></li>
+                        <li><a href="#">ARCHIVES</a></li>
+                    </ul>
+                </li>
+                <li><a href="#store">STORE</a>
+                    <ul>
+                        <li><a href="{% url 'album' %}">ALBUM</a></li>
+                        <li><a href="{% url 'audiobookstore' %}">AUDIOBOOK</a></li>
+                        <li><a href="{% url 'ebookstore' %}">EBOOK</a></li>
+                        <li><a href="{% url 'magazinestore' %}">MAGAZINE</a></li> 
+                    </ul>
+                </li>
+                <li class="icon"><a href="#" id="search-icon"><i class="fas fa-search"></i></a></li>
+                <li class="icon"><a href="#"><i class="fas fa-user"></i></a></li>
+            </ul>
+          <div class="search-bar" id="searchBar">
+<input type="text" id="searchInput" placeholder="Type something...">
+<button id="searchButton">Go</button>
+</div>
+</nav>
+</div>
+
+<!-- Script -->
+<script src="script.js" defer></script>
+    </header>
+    </ul>
+</nav>
+        <!-- Ebook Grid -->
+    <div class="ebook-grid">
+        <!-- Ebook 1 -->
+        <div class="ebook">
+            <img src="\static\ebook1.jpeg" alt="Ebook Cover 1" class="cover-image">
+            <i class="fas fa-book-open book-icon"></i>
+            <p class="ebook-title">The Girl Who Was Taken</p>
+            <p class="ebook-description">A Gripping Psychological Thriller
+            </p>
+            <button class="read-button"><a href="{% url 'ebookpage1' %}" style="text-decoration: none;">
+                <span style="color:#ffffff">Read Now</span></a></button>
+        </div>
+        <!-- Ebook 2 -->
+        <div class="ebook">
+            <img src="\static\ebook2.jpg" alt="Ebook Cover 2" class="cover-image">
+            <i class="fas fa-book-open book-icon"></i>
+            <p class="ebook-title">Sea of Shadows</p>
+            <p class="ebook-description">A dark fantasy trilogy</p>
+            <button class="read-button"><a href="{% url 'ebookpage2' %}" style="text-decoration: none;">
+                <span style="color:#ffffff">Read Now</span></a></button>
+            </div>
+        <!-- Ebook 3 -->
+        <div class="ebook">
+            <img src="\static\ebook3.jpg" alt="Ebook Cover 3" class="cover-image">
+            <i class="fas fa-book-open book-icon"></i>
+            <p class="ebook-title">No Exit: A Novel</p>
+            <p class="ebook-description">A kidnapped little girl</p>
+            <button class="read-button"><a href="{% url 'ebookpage3' %}" style="text-decoration: none;">
+                <span style="color:#ffffff">Read Now</span></a></button>
+            </div>
+        <!-- Ebook 4 -->
+        <div class="ebook">
+            <img src="\static\ebook4.jpg" alt="Ebook Cover 4" class="cover-image">
+            <i class="fas fa-book-open book-icon"></i>
+            <p class="ebook-title">The Chaos of Stars</p>
+            <p class="ebook-description">A captivating novel of first love</p>
+            <button class="read-button"><a href="{% url 'ebookpage4' %}" style="text-decoration: none;">
+                <span style="color:#ffffff">Read Now</span></a></button>
+            </div>
+        <!-- Ebook 5 -->
+        <div class="ebook">
+            <img src="\static\ebook5.jpg" alt="Ebook Cover 5" class="cover-image">
+            <i class="fas fa-book-open book-icon"></i>
+            <p class="ebook-title">Illusions of Fate</p>
+            <p class="ebook-description"> An absolute delight—a magical, dangerous world</p>
+            <button class="read-button"><a href="{% url 'ebookpage5' %}" style="text-decoration: none;">
+            <span style="color:#ffffff">Read Now</span></a></button>
+    </div> 
+</div>
+<!-- Footer -->
+<footer>
+    <h4 class="footer-heading">Librio official Page</h4>
+    <p class="footer-description">Name:LIBRIO  CEO(Name): Rubiya Nadaf, Ritika Jadhav<br>
+       Registration No.: 765-89-57638 <br>
+       Email:thelibrio@gmail.com</p>
+  
+    <div class="footer-links">
+        <a href="#terms">Terms & Conditions</a>
+        <a href="#privacy">Privacy Policy</a>
+    </div>
+    <p>&copy;2024 Librio. All rights reserved.</p>
+  </footer>
+  <script>
+      // Search Bar Functionality
+  document.getElementById('search-icon').addEventListener('click', function(event) {
+      event.preventDefault(); // Prevent the default link behavior
+      toggleSearchBar();
+  });
+
+  function toggleSearchBar() {
+      const searchBar = document.getElementById('searchBar');
+      searchBar.classList.toggle('show');
+  }
+
+  document.getElementById('searchButton').addEventListener('click', function () {
+      const searchTerm = document.getElementById('searchInput').value.trim();
+      if (searchTerm) {
+          alert(`Searching for: ${searchTerm}`);
+      } else {
+          alert('Please enter a search term.');
+      }
+  });
+  </script>
+</body>
+</html>
